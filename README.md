@@ -1,1 +1,1 @@
-# JavaScript로 Todo App 만들기
+# React로 Todo App 만들기
