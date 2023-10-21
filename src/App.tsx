@@ -1,34 +1,32 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-// 할 일을 나타내는 Todo 타입 정의
 interface Todo {
-  id: number;      // 고유 식별자
-  text: string;    // 할 일 텍스트
-  completed: boolean; // 완료 여부
+  id: number;
+  text: string;
+  completed: boolean;
 }
 
-// React 함수 컴포넌트 정의
-const App: React.FC = () => {
-  // 할 일 목록을 저장할 상태 변수 todos와 그 상태를 업데이트할 함수 setTodos
+const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoText, setNewTodoText] = useState(''); // 새로운 입력 필드 상태 추가
 
-  // 할 일을 추가하는 함수
-  const addTodo = (newTodo: string) => {
-    // 입력된 내용이 공백이 아닌 경우에만 실행
-    if (newTodo.trim() !== '') {
-      // 새로운 할 일을 todos 배열에 추가
-      setTodos((prevTodos) => [
-        ...prevTodos,
-        {
-          id: prevTodos.length + 1, // 현재 할 일의 개수 + 1을 사용하여 고유 ID 생성
-          text: newTodo,         // 사용자가 입력한 내용 저장
-          completed: false,      // 새로운 할 일은 완료되지 않았으므로 false
-        },
-      ]);
+  const addTodo = (newText: string) => {
+    if (newText.trim() === '') {
+      return;
     }
+
+    setTodos((prevTodos) => [
+      ...prevTodos,
+      {
+        id: prevTodos.length + 1,
+        text: newText,
+        completed: false,
+      },
+    ]);
+
+    setNewTodoText(''); // 입력 필드 초기화
   };
 
-  // 할 일의 완료 상태를 토글하는 함수
   const toggleTodo = (id: number) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
@@ -37,21 +35,21 @@ const App: React.FC = () => {
     );
   };
 
-  // 할 일을 제거하는 함수
   const removeTodo = (id: number) => {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
   return (
     <div>
-      {/* <h1>Todo List</h1> */}
       <input
         type="text"
         placeholder="Add a new task"
+        value={newTodoText} // 입력 필드 값 설정
+        onChange={(e) => setNewTodoText(e.target.value)} // 입력 값이 변경될 때 상태 업데이트
         onKeyPress={(e) => {
           if (e.key === 'Enter') {
-            addTodo(e.currentTarget.value);
-            e.currentTarget.value = ''; // 입력 필드 초기화
+            addTodo(newTodoText); // 입력 값을 사용하여 새로운 항목 추가
+            setNewTodoText(''); // 입력 필드 초기화
           }
         }}
       />
